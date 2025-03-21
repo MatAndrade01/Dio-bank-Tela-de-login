@@ -6,12 +6,27 @@ import {
 } from "@chakra-ui/react"
 import { Header } from "./Header/Header"
 import { ButtonLogin } from "./Button/Button"
-import {  useState } from "react"
+import {  useState, useEffect} from "react"
 import { login } from "../services/login"
+import { api } from "../api"
+
+interface UserData {
+  email: string,
+  password: string,
+  name: string
+}
 
 export const Card = () => {
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState<string>('')
+  const [userData, setUseData] = useState<null | UserData>()
 
+  useEffect(() => {
+    const getData = async () => {
+      const data:any | UserData= await api
+      setUseData(data)
+    }
+    getData()
+  }, [])
 
   return (
     <ChakraProvider>
@@ -20,6 +35,12 @@ export const Card = () => {
           <Header />
         </Center>
         <Box backgroundColor='#FFFFFF' borderRadius='25px' padding='15px' marginTop='40px'>
+          <Center>
+          {userData === null || userData === undefined ?
+            <h1>Loading...</h1> :
+            <h1>Informações carregadas</h1>
+          }
+          </Center>
           <Center>
             <h1>Faça o login</h1>
           </Center>
